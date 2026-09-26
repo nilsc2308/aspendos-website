@@ -176,3 +176,8 @@
     tpl.previousElementSibling.addEventListener("click", () => openDish(tpl));
   });
 })();
+
+// App-Version (PWA): Service Worker anmelden – macht die Seite installierbar und offline nutzbar
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}
