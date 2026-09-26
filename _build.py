@@ -6,7 +6,6 @@ Die Seiten sind 1:1 das serverseitig gerenderte HTML der Lovable-Version
 Interaktion (Cookie-Banner, Karte, Allergen-Fenster) übernimmt main.js.
 Aufruf: python3 _build.py
 """
-import hashlib
 import json
 import os
 import re
@@ -60,13 +59,7 @@ def transform(page, html):
     html = html.replace("</head>",
                         f'<link rel="icon" href="{pre}favicon.ico" sizes="48x48"/>'
                         f'<link rel="icon" href="{pre}favicon.svg" type="image/svg+xml"/>'
-                        f'<link rel="apple-touch-icon" href="{pre}apple-touch-icon.png"/>'
-                        # App-Version (PWA): installierbar, eigene Farbe in der Statusleiste
-                        f'<link rel="manifest" href="{pre}manifest.webmanifest"/>'
-                        '<meta name="theme-color" content="#120c09"/>'
-                        '<meta name="mobile-web-app-capable" content="yes"/>'
-                        '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>'
-                        '<meta name="apple-mobile-web-app-title" content="Aspendos"/></head>', 1)
+                        f'<link rel="apple-touch-icon" href="{pre}apple-touch-icon.png"/></head>', 1)
     html = html.replace("</body>", f'<script src="{pre}main.js" data-root="{pre}" defer></script></body>')
     return html
 
@@ -108,29 +101,6 @@ def main():
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         open(dest, "w", encoding="utf-8").write(html)
         print("✓", os.path.relpath(dest, ROOT))
-    build_service_worker()
-
-
-def build_service_worker():
-    """Erzeugt sw.js: alle Seiten und Dateien für den Offline-Betrieb, Version = Prüfsumme des Inhalts."""
-    urls = ["/"] + [f"/{p}/" for p in PAGES if p not in ("index", "404")]
-    files = [os.path.join(ROOT, "index.html")] + [out_path(p) for p in PAGES if p not in ("index", "404")]
-    for folder in ("css", "fonts", "img", "icons"):
-        for name in sorted(os.listdir(os.path.join(ROOT, folder))):
-            if name.startswith(".") or name == "og.png" or name.endswith(".svg") and folder == "icons":
-                continue
-            urls.append(f"/{folder}/{name}")
-            files.append(os.path.join(ROOT, folder, name))
-    for name in ("main.js", "manifest.webmanifest", "favicon.svg", "favicon.ico", "apple-touch-icon.png"):
-        urls.append("/" + name)
-        files.append(os.path.join(ROOT, name))
-    digest = hashlib.sha256()
-    for f in files:
-        digest.update(open(f, "rb").read())
-    sw = open(os.path.join(ROOT, "_sw-vorlage.js"), encoding="utf-8").read()
-    sw = sw.replace("__VERSION__", digest.hexdigest()[:10]).replace("__FILES__", json.dumps(urls, indent=2))
-    open(os.path.join(ROOT, "sw.js"), "w", encoding="utf-8").write(sw)
-    print("✓ sw.js –", len(urls), "Dateien offline verfügbar")
 
 
 if __name__ == "__main__":
