@@ -16,6 +16,7 @@ Reines HTML/CSS, keine Abhängigkeiten. Seiten neu erzeugen: `python3 _build.py`
 ## Gestalterische Änderungen (auf Nils' Wunsch)
 - 26.9.: Kapsel „Alles frisch zubereitet“ über der Startseiten-Überschrift ersetzt durch schlichte Goldzeile „Gyros · Schnitzel · Pizza“
 - 26.9.: eigenes Seiten-Symbol (Favicon + Handy-App-Symbol) „Glut-Bogen“: Playfair-A unter einem Rundbogen (Theater von Aspendos), Glut-Rot mit Goldkante auf Kohle. Quelle: `_favicon.js`
+- 26.9. abends: App-Version (PWA) gebaut und auf Nils' Wunsch am selben Abend wieder entfernt. `sw.js` ist nur noch ein Abschalt-Worker (löscht den Offline-Speicher bei Besuchern, die sie schon hatten) – einige Monate liegen lassen, dann löschen.
 
 ## Offen vor dem Umzug
 - [ ] Hosting wählen und Dateien hochladen (alles außer `_quelle/`, `_build.py`, dieser Datei)

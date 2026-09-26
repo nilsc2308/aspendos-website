@@ -176,3 +176,8 @@
     tpl.previousElementSibling.addEventListener("click", () => openDish(tpl));
   });
 })();
+
+// Die App-Version (PWA) wurde entfernt: eventuell noch angemeldete Service Worker abmelden
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
+}
