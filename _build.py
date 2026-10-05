@@ -61,6 +61,16 @@ def transform(page, html):
                         f'<link rel="icon" href="{pre}favicon.svg" type="image/svg+xml"/>'
                         f'<link rel="apple-touch-icon" href="{pre}apple-touch-icon.png"/></head>', 1)
     html = html.replace("</body>", f'<script src="{pre}main.js" data-root="{pre}" defer></script></body>')
+
+    # Hinweis auf crestra im Fuß (wie bei CO2NSULTING)
+    madeby = ('<div class="madeby-rahmen"><div class="madeby">'
+              '<span>Diese Website gefällt Ihnen?</span>'
+              '<a href="https://crestra.de" target="_blank" rel="noopener">Website von <b>crestra.de</b> →</a>'
+              '<a href="mailto:info@crestra.de">info@crestra.de</a></div></div>')
+    html, n = re.subn(r'(</div><div class="border-t border-white/10">)', r'</div>' + madeby.replace('\\', '\\\\') + '<div class="border-t border-white/10">', html, count=1)
+    if page != "404":
+        assert n == 1, page
+    html = html.replace("</head>", f'<link rel="stylesheet" href="{pre}css/crestra.css"/></head>', 1)
     return html
 
 
